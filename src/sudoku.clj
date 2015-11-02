@@ -1,7 +1,11 @@
 (ns sudoku
   (:require [clojure.set :as set]))
 
+; An empty board
 (def board identity)
+
+; Numbers from 1 to 9. Valid values for a block/row/col
+(def all-values #{1 2 3 4 5 6 7 8 9})
 
 (defn value-at [board coord]
   (get-in board coord))
@@ -22,17 +26,23 @@
   [(- row (mod row 3)) (- col (mod col 3))])
 
 (defn block-values [board coord]
-  
-)
+  (let [ [top-x top-y] (upleft-corner coord) ]
+    (set (for [x (range top-x (+ top-x 3))  y (range top-y (+ top-y 3)) ]
+           (get-in board [x y])))))
 
 (defn valid-values-for [board coord]
-  nil)
+(cond 
+ (has-value? board coord) (set '())
+ :else (set/difference all-values 
+                       (col-values board coord) 
+                       (row-values board coord) 
+                       (block-values board coord))))
 
 (defn filled? [board]
-  nil)
+  (not (contains? (set (apply concat board)) 0)))
 
 (defn rows [board]
-  nil)
+  (reduce (fn [acc coll] (conj acc (set coll))) []  board))
 
 (defn valid-rows? [board]
   nil)
