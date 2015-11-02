@@ -44,30 +44,35 @@
 (defn rows [board]
   (reduce (fn [acc coll] (conj acc (set coll))) [] board))
 
+; A helper for checking if all collections match
+(defn contains-all? [values]
+  (every? (fn [v] (= v all-values)) values))
+
 (defn valid-rows? [board]
-  )
+  (contains-all? (rows board)))
 
 (defn cols [board]
   (for [column (range 9)] (col-values board [0 column])))
 
 (defn valid-cols? [board]
-  nil)
+  (contains-all? (cols board)))
 
 (defn blocks [board]
   (vec (for [corner (coord-pairs (range 0 9 3))] 
          (block-values board corner))))
 
 (defn valid-blocks? [board]
-  nil)
+  (contains-all? (blocks board)))
 
 (defn valid-solution? [board]
-  nil)
+  (and (valid-blocks? board) (valid-rows? board) (valid-cols? board)))
 
 (defn set-value-at [board coord new-value]
-  nil)
+  (assoc-in board coord new-value))
 
 (defn find-empty-point [board]
-  nil)
+  (first (filter (fn [coord] (not (has-value? board coord))) 
+                 (for [x (range 9) y (range 9)] [x y]))))
 
 (defn solve [board]
   nil)
