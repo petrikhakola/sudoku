@@ -32,7 +32,7 @@
 
 (defn valid-values-for [board coord]
 (cond 
- (has-value? board coord) (set '())
+ (has-value? board coord) #{}
  :else (set/difference all-values 
                        (col-values board coord) 
                        (row-values board coord) 
@@ -42,19 +42,20 @@
   (not (contains? (set (apply concat board)) 0)))
 
 (defn rows [board]
-  (reduce (fn [acc coll] (conj acc (set coll))) []  board))
+  (reduce (fn [acc coll] (conj acc (set coll))) [] board))
 
 (defn valid-rows? [board]
-  nil)
+  )
 
 (defn cols [board]
-  nil)
+  (for [column (range 9)] (col-values board [0 column])))
 
 (defn valid-cols? [board]
   nil)
 
 (defn blocks [board]
-  nil)
+  (vec (for [corner (coord-pairs (range 0 9 3))] 
+         (block-values board corner))))
 
 (defn valid-blocks? [board]
   nil)
